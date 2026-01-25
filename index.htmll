@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurora</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0f1419;color:#e7e9ea;display:flex;justify-content:center}
+    .app{width:100%;max-width:600px;min-height:100vh;border-left:1px solid #2f3336;border-right:1px solid #2f3336}
+    header{padding:12px;font-size:20px;font-weight:bold;border-bottom:1px solid #2f3336;display:flex;justify-content:space-between;align-items:center}
+    button{background:#1d9bf0;color:#fff;border:none;padding:6px 12px;border-radius:20px;cursor:pointer}
+    .composer{padding:12px;border-bottom:1px solid #2f3336;display:none}
+    textarea{width:100%;background:transparent;border:none;resize:none;color:#e7e9ea;font-size:16px;outline:none}
+    .tweet{padding:12px;border-bottom:1px solid #2f3336}
+    .user{font-weight:bold}
+    .time{color:#71767b;font-size:12px;margin-left:6px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <span>Aurora</span>
+      <button id="authBtn">Login</button>
+    </header>
+
+    <div class="composer" id="composer">
+      <textarea id="text" rows="3" maxlength="280" placeholder="Šta se dešava?"></textarea>
+      <button onclick="post()">Post</button>
+    </div>
+
+    <div id="feed"></div>
+  </div>
+
+<script>
+let user = null;
+const feed = document.getElementById('feed');
+const composer = document.getElementById('composer');
+const authBtn = document.getElementById('authBtn');
+
+netlifyIdentity.on('init', u => setUser(u));
+netlifyIdentity.on('login', u => { setUser(u); netlifyIdentity.close(); });
+netlifyIdentity.on('logout', () => setUser(null));
+netlifyIdentity.init();
+
+function setUser(u){
+  user = u;
+  if(user){ composer.style.display='block'; authBtn.textContent='Logout'; }
+  else { composer.style.display='none'; authBtn.textContent='Login'; }
+}
+
+authBtn.onclick = () => user ? netlifyIdentity.logout() : netlifyIdentity.open();
+
+function load(){
+  const data = JSON.parse(localStorage.getItem('aurora_posts')||'[]');
+  feed.innerHTML='';
+  data.slice().reverse().forEach(p=>add(p));
+}
+
+function post(){
+  const t=document.getElementById('text');
+  if(!t.value.trim())return;
+  const data=JSON.parse(localStorage.getItem('aurora_posts')||'[]');
+  data.push({user:user.user_metadata.full_name||user.email,text:t.value,time:new Date().toLocaleString()});
+  localStorage.setItem('aurora_posts',JSON.stringify(data));
+  t.value=''; load();
+}
+
+function add(p){
+  const d=document.createElement('div'); d.className='tweet';
+  d.innerHTML=`<div><span class="user">@${p.user}</span><span class="time">${p.time}</span></div><div>${p.text}</div>`;
+  feed.append(d);
+}
+
+load();
+</script>
+</body>
+</html>
