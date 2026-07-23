@@ -51,7 +51,7 @@ async function resolveCoordinates(entry) {
 
 async function loadEntries() {
   try {
-    const response = await fetch(`data/entries.json?v=${Date.now()}`, { cache: "no-store" });
+    const response = await fetch("data/entries.json?v=" + Date.now(), { cache: "no-store" });
     if (!response.ok) {
       throw new Error("Unable to load data file");
     }
@@ -61,6 +61,19 @@ async function loadEntries() {
     entries = await Promise.all(dataEntries.map(resolveCoordinates));
     render();
   } catch (error) {
+    const dataElement = document.getElementById("entry-data");
+    if (dataElement) {
+      try {
+        const fallbackData = JSON.parse(dataElement.textContent);
+        const fallbackEntries = Array.isArray(fallbackData) && fallbackData.length > 0 ? fallbackData : [];
+        entries = await Promise.all(fallbackEntries.map(resolveCoordinates));
+        render();
+        return;
+      } catch (fallbackError) {
+        console.warn("Fallback data also failed", fallbackError);
+      }
+    }
+
     entries = [];
     render();
   }
