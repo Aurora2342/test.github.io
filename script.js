@@ -51,7 +51,7 @@ async function resolveCoordinates(entry) {
 
 async function loadEntries() {
   try {
-    const response = await fetch("data/entries.json");
+    const response = await fetch(`data/entries.json?v=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) {
       throw new Error("Unable to load data file");
     }
