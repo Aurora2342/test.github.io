@@ -1,42 +1,3 @@
-const defaultEntries = [
-  {
-    id: "signal-1",
-    title: "45thbrigade signal",
-    category: "signal",
-    city: "Belgrade, Serbia",
-    summary: "A notable public signal captured for 45thbrigade monitoring.",
-    source: "Telegram",
-    date: "2026-07-23"
-  },
-  {
-    id: "incident-1",
-    title: "45thbrigade incident report",
-    category: "incident",
-    city: "Berlin, Germany",
-    summary: "A community report tied to an event in the monitored region.",
-    source: "OSINT feed",
-    date: "2026-07-22"
-  },
-  {
-    id: "channel-1",
-    title: "45thbrigade monitoring node",
-    category: "channel",
-    city: "Madrid, Spain",
-    summary: "Primary monitoring node associated with the 45thbrigade workflow.",
-    source: "Telegram",
-    date: "2026-07-21"
-  },
-  {
-    id: "profile-1",
-    title: "45thbrigade profile observation",
-    category: "profile",
-    city: "Los Angeles, United States",
-    summary: "Profile observation that needs follow-up context for 45thbrigade.",
-    source: "Profile lookup",
-    date: "2026-07-20"
-  }
-];
-
 const categoryColors = {
   signal: "#55c0ff",
   incident: "#f6b73c",
@@ -96,11 +57,11 @@ async function loadEntries() {
     }
 
     const data = await response.json();
-    const dataEntries = Array.isArray(data) && data.length > 0 ? data : defaultEntries;
+    const dataEntries = Array.isArray(data) && data.length > 0 ? data : [];
     entries = await Promise.all(dataEntries.map(resolveCoordinates));
     render();
   } catch (error) {
-    entries = await Promise.all(defaultEntries.map(resolveCoordinates));
+    entries = [];
     render();
   }
 }
