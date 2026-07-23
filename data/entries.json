@@ -1,10 +1,10 @@
  [
   {
     "id": "signal-1",
-    "title": "air defense",
-    "category": "report",
-    "city": "Qeshm Island, Iran",
-    "summary": "clashes.",
+    "title": "45thbrigade signal",
+    "category": "signal",
+    "city": "example, example",
+    "summary": "A notable public signal captured for 45thbrigade monitoring.",
     "source": "Telegram",
     "date": "2026-07-23"
-  }
+  },
