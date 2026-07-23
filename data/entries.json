@@ -8,3 +8,12 @@
     "source": "Telegram",
     "date": "2026-07-23"
   },
+  {
+    "id": "incident-1",
+    "title": "incident report",
+    "category": "incident",
+    "city": "Red Sea, Red Sea",
+    "summary": "Yemen attack",
+    "source": "Iranian channel",
+    "date": "2026-07-21"
+  },
